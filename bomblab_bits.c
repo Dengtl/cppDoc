@@ -150,7 +150,7 @@ int bitAnd(int x, int y) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-	return (x>>(n<<3))&0xff;	//将要截取的字节移到最低八位在和0xff做& 操作
+	return (x>>(n<<3))&0xff;
 }
 /* 
  * logicalShift - shift x to the right by n, using a logical shift
@@ -174,8 +174,8 @@ int logicalShift(int x, int n) {
  */
 int bitCount(int x) {
   	int temp=(((1<<8)|1)<<8|1)<<8|1;//00000001 00000001 00000001 00000001 00000001. 一个字节一组
-	int val=x&temp; //每个字节的第一位
-	val+=val+(x>>1)&temp;//每个字节的第二位
+	int val=x&temp; 		//每个字节的第一位
+	val+=val+(x>>1)&temp;		//每个字节的第二位
 	val+=val+(x>>2)&temp;
 	val+=val+(x>>3)&temp;
 	val+=val+(x>>4)&temp;
@@ -194,13 +194,13 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  return ~(((~x+1)|x)>>31)&1;	//法1
-	/*1、当x == 0 的时候，(~x+1)|x == 00...0。全部为0.
-	2、当x != 0 的时候，~x+1 和 x 中必定有一个数的最高位为1。
+  return ~(((~x+1)|x)>>31)&1;			//法1
+	/*	1、当x == 0 的时候，(~x+1)|x == 00...0。全部为0.
+		2、当x != 0 的时候，~x+1 和 x 中必定有一个数的最高位为1。
 		x的最高位为0时，不确定x是否等于0，但是当x!=0时一定有：
 		(~x+1)的最高位为1，因为取反加1不可能让非零的x得到最高位0.*/
-  //当x == 0 的时候，(~x+1)|x == 00...0。
-  //当x != 0 d的时候，~x+1 和 x 中至少有一个数的最高位不为0；
+  	//当x == 0 的时候，(~x+1)|x == 00...0。
+  	//当x != 0 d的时候，~x+1 和 x 中至少有一个数的最高位不为0；
 	//x的最高位为1时，题目显然成立
 	//x的最高位为0时，不确定x是否等于0，但是当x!=0时一定有：(~x+1)的最高位为1，因为取反加1不可能让非零的x得到最高位0.
   return (~(((x>>31)&1)|(((~x+1)>>31)&1)))&1;	//法2
@@ -217,7 +217,6 @@ int bang(int x) {
  */
 int tmin(void) {
   return 1<<31;
-  //100...0是最小整型数
 }
 /* 
  * fitsBits - return 1 if x can be represented as an 
@@ -230,12 +229,12 @@ int tmin(void) {
  */
 int fitsBits(int x, int n) {
   int mask = (~0)<<(n+(~0));	//1111..1000..0，后面是n-1个0，（作为检测是否越界的工具）
-  int a = x&mask;	//if x is negative,use !(a^mask) confirm true or not. 判断负数是否越界	
-  int b = ~x&mask;	//if x is positive,use !(b^mask) confirm true or not. 判断正数是否越界
+  int a = x&mask;		//if x is negative,use !(a^mask) confirm true or not. 判断负数是否越界	
+  int b = ~x&mask;		//if x is positive,use !(b^mask) confirm true or not. 判断正数是否越界
   return (!(a^mask))|(!(b^mask));	//没有发生越界的话，返回为真
-										//理由如下：
-											//1、!(a^mask)==1的话，负数端未越界，!(a^mask)==1等价于a==mask.
-											//2、!(b^mask)==1的话，正数端未越界，!(b^mask)==1等价于b==mask.
+					//理由如下：
+					//1、!(a^mask)==1的话，负数端未越界，!(a^mask)==1等价于a==mask.
+					//2、!(b^mask)==1的话，正数端未越界，!(b^mask)==1等价于b==mask.
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -246,11 +245,11 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    int s = x>>31;			//如果 x 是负数的话，s=0xffffffff; 否则 s = 0x00000000;
-	int mask = (1<<n)+~0;	//000...0100...0,后面有n个0；
-							//再将其减去1 “(+(-1)的方式达到减一的目的)” 得到：000...011..1,后面有n个1.
-	int forZero = s&mask;		//计算偏移值,正数偏移值为0，负数偏移值为 000...011...1,后面有n个1。
-	return (x+forZero)>>n;	
+    int s = x>>31;		//如果 x 是负数的话，s=0xffffffff; 否则 s = 0x00000000;
+    int mask = (1<<n)+~0;	//000...0100...0,后面有n个0；
+				//再将其减去1 “(+(-1)的方式达到减一的目的)” 得到：000...011..1,后面有n个1.
+    int neg_fix = s&mask;	//计算偏移值,正数偏移值为0，负数偏移值为 000...011...1,后面有n个1。
+    return (x+neg_fix)>>n;	
 }
 /* 
  * negate - return -x 
@@ -260,7 +259,7 @@ int divpwr2(int x, int n) {
  *   Rating: 2
  */
 int negate(int x) {
-  return ~x+1; //运算性质 
+  return ~x+1; 
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
@@ -288,8 +287,8 @@ int isLessOrEqual(int x, int y) {
   //当 x<0&&y>=0 时，用(sx&!sy)来判断。
   //当 x,y 同号的时候，用 p = ((x+(~y))>>31)&(!(sx^sy)); 来判断。
 	//理由如下：
-		//1、!(sx^sy) 用来限定 x 和 y 同号；同号的话 !(sx^sy) ==1.
-		//2、(x+(~y))>>31 用来检验 x-y+1 是不是负数，是负数的话 y>=x;成立
+	//1、!(sx^sy) 用来限定 x 和 y 同号；同号的话 !(sx^sy) ==1.
+	//2、(x+(~y))>>31 用来检验 x-y+1 是不是负数，是负数的话 y>=x;成立
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
@@ -302,8 +301,8 @@ int isLessOrEqual(int x, int y) {
 int ilog2(int x) {
   int val=0; 
   val=(!!(x>>16))<<4;  			//检测x的前16位是否存在‘1’.存在：val = 16; 否则 val = 0; 将二进制序列分割成两半。
-  val=val+((!!(x>>(val+8)))<<3);//根据上一步，如果前16位存在‘1’，则判断前8位是否存在‘1’，存在的话，val = val + 8;
-								//否则 val = val + 0;
+  val=val+((!!(x>>(val+8)))<<3);	//根据上一步，如果前16位存在‘1’，则判断前8位是否存在‘1’，存在的话，val = val + 8;
+					//否则 val = val + 0;
   val=val+((!!(x>>(val+4)))<<2);  
   val=val+((!!(x>>(val+2)))<<1);  
   val=val+(!!(x>>(val+1)));  
@@ -332,9 +331,9 @@ int ilog2(int x) {
 unsigned float_neg(unsigned uf) {
   int frac = 0x007fffff&uf;		//取Frac部分
   int exp = 0x7f800000&uf;		//用来判断阶码部分是否全为1
-  if((exp==0x7f800000)&&frac）	//如果阶码全为1，且尾数部分全为0，返回uf.
+  if((exp==0x7f800000)&&frac）		//如果阶码全为1，且尾数部分全为0，返回uf.
 	return uf;
-  else return uf^0x80000000; 	//否则的话返回 -uf.
+  else return uf^0x80000000; 		//否则的话返回 -uf.
 }
 /* 
  * float_i2f - Return bit-level equivalent of expression (float) x
@@ -351,25 +350,25 @@ unsigned float_i2f(int x) {
   int temp = x;
   int shiftLeft, isCarryOut, mask, tmask;
   int flag = 0;
-  if(!x) return 0;	//如果x等于0，返回0.
+  if(!x) return 0;				//如果x等于0，返回0.
   if(x == 0x80000000) return 0xcf000000;	//不对称，所以单独考虑最小得负数
-  if(s) temp = -x;	//当x为负数的时候，用其相反数来求指数的值。
-  while(i<31){	//循环求指数的大小
+  if(s) temp = -x;				//当x为负数的时候，用其相反数来求指数的值。
+  while(i<31){					//循环求指数的大小
 	if((temp>>i)&1) exp = i;
 	i++;
   }
   if(exp<=23){ frac = (temp<<(23-exp))&0x007fffff; }	//如果指数小于等于23，则尾数部分可以通过，|x|左移来得到.
   else{	//指数大于23
-	shiftLeft = exp-23;	//左移的位数
-	mask = (1<<shiftLeft)-1;	//用作保存被舍去的数位。000...0111...1
-	tmask = 1<<(shiftLeft-1);	//用作和被舍去的数位进行比较，决定如何舍入。000...0100...0
-	isCarryOut = mask&temp;		//判断是否要进位。保存舍去的数位。
+	shiftLeft = exp-23;			//左移的位数
+	mask = (1<<shiftLeft)-1;		//用作保存被舍去的数位。000...0111...1
+	tmask = 1<<(shiftLeft-1);		//用作和被舍去的数位进行比较，决定如何舍入。000...0100...0
+	isCarryOut = mask&temp;			//判断是否要进位。保存舍去的数位。
 	frac = (temp>>shiftLeft)&0x007fffff;	//尾数部分。
 	if((isCarryOut > tmask)||((frac&1)&&(isCarryOut == tmask))){
-		flag = 1;	//符合舍入规则，令flag等于0.
+		flag = 1;			//符合舍入规则，令flag等于0.
 	}
   }
-  return s+((exp+127)<<23)+frac+flag;	//组装返回值.
+  return s+((exp+127)<<23)+frac+flag;		//组装返回值.
 }
 /* 
  * float_twice - Return bit-level equivalent of expression 2*f for
@@ -384,39 +383,10 @@ unsigned float_i2f(int x) {
  */
 unsigned float_twice(unsigned uf) {
   int s, exp;
-  s = uf&0x80000000;	//符号位
-  exp = uf&0x7f800000;	//指数部分
+  s = uf&0x80000000;			//符号位
+  exp = uf&0x7f800000;			//指数部分
   if(exp==0x7f800000) return uf;	//NaN时，返回原值
   else
 	if(exp!=0) return uf+0x00800000; //指数部分不为0时，指数部分加1
   return s+((uf&0x007fffff)<<1);	 //指数部分为0时，尾数部分左移1位
 }
-
-
-
-/*int s = (x>>31)&1;
-  int exp = ((0x7f800000&x)>>23)-127;	//阶码大小
-  int frac = 0x007fffff&uf;
-  if(exp<=0)
-	return s?0:0x80000000;
-  if(exp>=23)
-	return x;
-  else	return ((((1<<exp)-1)<<(23-exp))&frac)+(x&0xff800000);
-  int shiftNumber;
-  int number;
-  if(!(1<<exp)) 
-	if(s) return ~frac + 1;
-	else return frac;
-  shiftNumber = 1<<exp;
-  number = (((1<<shiftNumber)-1)<<(23-shiftNumber))&frac;
-  if(!s) return number;
-  else ~number+1;*/
-  
-  /*if(isCarryOut > isCarryOut+1){
-		flagOfFrac = 1;
-	}
-	if(isCarryOut == isCarryOut+1){
-		if(frac&1) flagOfFrac = 1;
-	}
-	if((frac+1)&0x007fffff==0&&flagOfFrac) flagOfExp = 1; //(frac+1)&0x007fffff;*/
-	//return (s<<31)|(((exp+127)<<23)+flagOfExp)|(frac+flagOfFrac);
